@@ -66,6 +66,7 @@ luaL_Reg GlobalMethods[] =
     { "RegisterItemGossipEvent", &LuaGlobalFunctions::RegisterItemGossipEvent },
     { "RegisterPlayerGossipEvent", &LuaGlobalFunctions::RegisterPlayerGossipEvent },
     { "RegisterBGEvent", &LuaGlobalFunctions::RegisterBGEvent },
+    { "RegisterVehicleEvent", &LuaGlobalFunctions::RegisterVehicleEvent },
     { "RegisterMapEvent", &LuaGlobalFunctions::RegisterMapEvent },
     { "RegisterInstanceEvent", &LuaGlobalFunctions::RegisterInstanceEvent },
     { "RegisterTicketEvent", &LuaGlobalFunctions::RegisterTicketEvent },
@@ -74,6 +75,7 @@ luaL_Reg GlobalMethods[] =
 
 
     { "ClearBattleGroundEvents", &LuaGlobalFunctions::ClearBattleGroundEvents },
+    { "ClearVehicleEvents", &LuaGlobalFunctions::ClearVehicleEvents },
     { "ClearCreatureEvents", &LuaGlobalFunctions::ClearCreatureEvents },
     { "ClearUniqueCreatureEvents", &LuaGlobalFunctions::ClearUniqueCreatureEvents },
     { "ClearCreatureGossipEvents", &LuaGlobalFunctions::ClearCreatureGossipEvents },
@@ -330,7 +332,7 @@ ALERegister<Unit> UnitMethods[] =
     { "GetStat", &LuaUnit::GetStat },
     { "GetBaseSpellPower", &LuaUnit::GetBaseSpellPower },
     { "GetVehicleKit", &LuaUnit::GetVehicleKit },
-    // {"GetVehicle", &LuaUnit::GetVehicle},                           // :GetVehicle() - UNDOCUMENTED - Gets the Vehicle kit of the vehicle the unit is on
+    { "GetVehicle", &LuaUnit::GetVehicle },
     { "GetMovementType", &LuaUnit::GetMovementType },
     { "GetAttackers", &LuaUnit::GetAttackers },
     { "GetThreat", &LuaUnit::GetThreat },
@@ -349,15 +351,15 @@ ALERegister<Unit> UnitMethods[] =
     { "SetFacingToObject", &LuaUnit::SetFacingToObject },
     { "SetSpeed", &LuaUnit::SetSpeed },
     { "SetSpeedRate", &LuaUnit::SetSpeedRate },
-    // {"SetStunned", &LuaUnit::SetStunned},                           // :SetStunned([enable]) - UNDOCUMENTED - Stuns or removes stun
+    { "SetStunned", &LuaUnit::SetStunned },
     {"SetRooted", &LuaUnit::SetRooted},
     {"SetConfused", &LuaUnit::SetConfused},
     {"SetFeared", &LuaUnit::SetFeared},
     { "SetPvP", &LuaUnit::SetPvP },
     { "SetFFA", &LuaUnit::SetFFA },
     { "SetSanctuary", &LuaUnit::SetSanctuary },
-    // {"SetCanFly", &LuaUnit::SetCanFly},                             // :SetCanFly(apply) - UNDOCUMENTED
-    // {"SetVisible", &LuaUnit::SetVisible},                           // :SetVisible(x) - UNDOCUMENTED
+    { "SetCanFly", &LuaUnit::SetCanFly },
+    { "SetVisible", &LuaUnit::SetVisible },
     { "SetOwnerGUID", &LuaUnit::SetOwnerGUID },
     { "SetName", &LuaUnit::SetName },
     { "SetSheath", &LuaUnit::SetSheath },
@@ -400,9 +402,9 @@ ALERegister<Unit> UnitMethods[] =
     { "IsMounted", &LuaUnit::IsMounted },
     { "AttackStop", &LuaUnit::AttackStop },
     { "Attack", &LuaUnit::Attack },
-    // {"IsVisible", &LuaUnit::IsVisible},                              // :IsVisible() - UNDOCUMENTED
-    // {"IsMoving", &LuaUnit::IsMoving},                                // :IsMoving() - UNDOCUMENTED
-    // {"IsFlying", &LuaUnit::IsFlying},                                // :IsFlying() - UNDOCUMENTED
+    { "IsVisible", &LuaUnit::IsVisible },
+    { "IsMoving", &LuaUnit::IsMoving },
+    { "IsFlying", &LuaUnit::IsFlying },
     { "IsStopped", &LuaUnit::IsStopped },
     { "HasUnitState", &LuaUnit::HasUnitState },
     { "IsQuestGiver", &LuaUnit::IsQuestGiver },
@@ -440,16 +442,16 @@ ALERegister<Unit> UnitMethods[] =
     { "CountPctFromMaxHealth", &LuaUnit::CountPctFromMaxHealth },
     { "Dismount", &LuaUnit::Dismount },
     { "Mount", &LuaUnit::Mount },
-    // {"RestoreDisplayId", &LuaUnit::RestoreDisplayId},                // :RestoreDisplayId() - UNDOCUMENTED
-    // {"RestoreFaction", &LuaUnit::RestoreFaction},                    // :RestoreFaction() - UNDOCUMENTED
-    // {"RemoveBindSightAuras", &LuaUnit::RemoveBindSightAuras},        // :RemoveBindSightAuras() - UNDOCUMENTED
-    // {"RemoveCharmAuras", &LuaUnit::RemoveCharmAuras},                // :RemoveCharmAuras() - UNDOCUMENTED
+    { "RestoreDisplayId", &LuaUnit::RestoreDisplayId },
+    { "RestoreFaction", &LuaUnit::RestoreFaction },
+    { "RemoveBindSightAuras", &LuaUnit::RemoveBindSightAuras },
+    { "RemoveCharmAuras", &LuaUnit::RemoveCharmAuras },
     { "ClearThreatList", &LuaUnit::ClearThreatList },
     { "GetThreatList", &LuaUnit::GetThreatList },
     { "ClearUnitState", &LuaUnit::ClearUnitState },
     { "AddUnitState", &LuaUnit::AddUnitState },
-    // {"DisableMelee", &LuaUnit::DisableMelee},                        // :DisableMelee([disable]) - UNDOCUMENTED - if true, enables
-    // {"SummonGuardian", &LuaUnit::SummonGuardian},                    // :SummonGuardian(entry, x, y, z, o[, duration]) - UNDOCUMENTED - summons a guardian to location. Scales with summoner, is friendly to him and guards him.
+    { "DisableMelee", &LuaUnit::DisableMelee },
+    { "SummonGuardian", &LuaUnit::SummonGuardian },
     { "NearTeleport", &LuaUnit::NearTeleport },
     { "MoveIdle", &LuaUnit::MoveIdle },
     { "MoveRandom", &LuaUnit::MoveRandom },
@@ -540,7 +542,10 @@ ALERegister<Player> PlayerMethods[] =
     { "GetOriginalSubGroup", &LuaPlayer::GetOriginalSubGroup },
     { "GetChampioningFaction", &LuaPlayer::GetChampioningFaction },
     { "GetLatency", &LuaPlayer::GetLatency },
-    // {"GetRecruiterId", &LuaPlayer::GetRecruiterId},                            // :GetRecruiterId() - UNDOCUMENTED - Returns player's recruiter's ID
+    { "GetRecruiterId", &LuaPlayer::GetRecruiterId },
+    { "GetSelectedPlayer", &LuaPlayer::GetSelectedPlayer },
+    { "GetSelectedUnit", &LuaPlayer::GetSelectedUnit },
+    { "GetNearbyGameObject", &LuaPlayer::GetNearbyGameObject },
     { "GetDbLocaleIndex", &LuaPlayer::GetDbLocaleIndex },
     { "GetDbcLocale", &LuaPlayer::GetDbcLocale },
     { "GetCorpse", &LuaPlayer::GetCorpse },
@@ -586,7 +591,6 @@ ALERegister<Player> PlayerMethods[] =
     { "SetReputation", &LuaPlayer::SetReputation },
     { "SetFreeTalentPoints", &LuaPlayer::SetFreeTalentPoints },
     { "SetGuildRank", &LuaPlayer::SetGuildRank },
-    // {"SetMovement", &LuaPlayer::SetMovement},                  // :SetMovement(type) - UNDOCUMENTED - Sets player's movement type
     { "SetSkill", &LuaPlayer::SetSkill },
     { "SetFactionForRace", &LuaPlayer::SetFactionForRace },
     { "SetDrunkValue", &LuaPlayer::SetDrunkValue },
@@ -737,8 +741,6 @@ ALERegister<Player> PlayerMethods[] =
     { "ResetTypeCooldowns", &LuaPlayer::ResetTypeCooldowns },
     { "ResetAllCooldowns", &LuaPlayer::ResetAllCooldowns },
     { "GiveXP", &LuaPlayer::GiveXP },                                                       // :GiveXP(xp[, victim, pureXP, triggerHook]) - UNDOCUMENTED - Gives XP to the player. If pure is false, bonuses are count in. If triggerHook is false, GiveXp hook is not triggered.
-    // {"RemovePet", &LuaPlayer::RemovePet},                                                // :RemovePet([mode, returnreagent]) - UNDOCUMENTED - Removes the player's pet. Mode determines if the pet is saved and how
-    // {"SummonPet", &LuaPlayer::SummonPet},                                              // :SummonPet(entry, x, y, z, o, petType, despwtime) - Summons a pet for the player
     { "Say", &LuaPlayer::Say },
     { "Yell", &LuaPlayer::Yell },
     { "TextEmote", &LuaPlayer::TextEmote },
@@ -748,22 +750,21 @@ ALERegister<Player> PlayerMethods[] =
     { "FailQuest", &LuaPlayer::FailQuest },
     { "AddQuest", &LuaPlayer::AddQuest },
     { "RemoveQuest", &LuaPlayer::RemoveQuest },
-    // {"RemoveActiveQuest", &LuaPlayer::RemoveActiveQuest},                                // :RemoveActiveQuest(entry) - UNDOCUMENTED - Removes an active quest
-    // {"RemoveRewardedQuest", &LuaPlayer::RemoveRewardedQuest},                            // :RemoveRewardedQuest(entry) - UNDOCUMENTED - Removes a rewarded quest
+    { "RemoveActiveQuest", &LuaPlayer::RemoveActiveQuest },
+    { "RemoveRewardedQuest", &LuaPlayer::RemoveRewardedQuest },
     { "AreaExploredOrEventHappens", &LuaPlayer::AreaExploredOrEventHappens },
     { "GroupEventHappens", &LuaPlayer::GroupEventHappens },
     { "KilledMonsterCredit", &LuaPlayer::KilledMonsterCredit },
-    // {"KilledPlayerCredit", &LuaPlayer::KilledPlayerCredit},                              // :KilledPlayerCredit() - UNDOCUMENTED - Satisfies a player kill for the player
-    // {"KillGOCredit", &LuaPlayer::KillGOCredit},                                          // :KillGOCredit(GOEntry[, GUID]) - UNDOCUMENTED - Credits the player for destroying a GO, guid is optional
+    { "KilledPlayerCredit", &LuaPlayer::KilledPlayerCredit },
+    { "KillGOCredit", &LuaPlayer::KillGOCredit },
     { "TalkedToCreature", &LuaPlayer::TalkedToCreature },
     { "ResetPetTalents", &LuaPlayer::ResetPetTalents },
     { "AddComboPoints", &LuaPlayer::AddComboPoints },
-    // {"GainSpellComboPoints", &LuaPlayer::GainSpellComboPoints},                          // :GainSpellComboPoints(amount) - UNDOCUMENTED - Player gains spell combo points
+    { "GainSpellComboPoints", &LuaPlayer::GainSpellComboPoints },
     { "ClearComboPoints", &LuaPlayer::ClearComboPoints },
     { "RemoveSpell", &LuaPlayer::RemoveSpell },
     { "ResetTalents", &LuaPlayer::ResetTalents },
     { "ResetTalentsCost", &LuaPlayer::ResetTalentsCost },
-    // {"AddTalent", &LuaPlayer::AddTalent},                                                // :AddTalent(spellid, spec, learning) - UNDOCUMENTED - Adds a talent spell for the player to given spec
     { "RemoveFromGroup", &LuaPlayer::RemoveFromGroup },
     { "KillPlayer", &LuaPlayer::KillPlayer },
     { "DurabilityLossAll", &LuaPlayer::DurabilityLossAll },
@@ -776,7 +777,7 @@ ALERegister<Player> PlayerMethods[] =
     { "ModifyHonorPoints", &LuaPlayer::ModifyHonorPoints },
     { "ModifyArenaPoints", &LuaPlayer::ModifyArenaPoints },
     { "LeaveBattleground", &LuaPlayer::LeaveBattleground },
-    // {"BindToInstance", &LuaPlayer::BindToInstance},                                      // :BindToInstance() - UNDOCUMENTED - Binds the player to the current instance
+    { "BindToInstance", &LuaPlayer::BindToInstance },
     { "UnbindInstance", &LuaPlayer::UnbindInstance },
     { "UnbindAllInstances", &LuaPlayer::UnbindAllInstances },
     { "RemoveFromBattlegroundRaid", &LuaPlayer::RemoveFromBattlegroundRaid },
@@ -958,7 +959,7 @@ ALERegister<GameObject> GameObjectMethods[] =
 
     // Boolean
     { "IsTransport", &LuaGameObject::IsTransport },
-    // {"IsDestructible", &LuaGameObject::IsDestructible},    // :IsDestructible() - UNDOCUMENTED
+    { "IsDestructible", &LuaGameObject::IsDestructible },
     { "IsActive", &LuaGameObject::IsActive },
     { "HasQuest", &LuaGameObject::HasQuest },
     { "IsSpawned", &LuaGameObject::IsSpawned },
@@ -1033,7 +1034,7 @@ ALERegister<Item> ItemMethods[] =
     { "IsWeaponVellum", &LuaItem::IsWeaponVellum },
     { "IsArmorVellum", &LuaItem::IsArmorVellum },
     { "IsConjuredConsumable", &LuaItem::IsConjuredConsumable },
-    //{"IsRefundExpired", &LuaItem::IsRefundExpired},               // :IsRefundExpired() - UNDOCUMENTED - Returns true if the item's refund time has expired
+    { "IsRefundExpired", &LuaItem::IsRefundExpired },
     { "SetEnchantment", &LuaItem::SetEnchantment },
     { "ClearEnchantment", &LuaItem::ClearEnchantment },
 
@@ -1119,7 +1120,7 @@ ALERegister<Quest> QuestMethods[] =
     // Getters
     { "GetId", &LuaQuest::GetId },
     { "GetLevel", &LuaQuest::GetLevel },
-    // {"GetMaxLevel", &LuaQuest::GetMaxLevel},                   // :GetMaxLevel() - UNDOCUMENTED - Returns the quest's max level
+    { "GetMaxLevel", &LuaQuest::GetMaxLevel },
     { "GetMinLevel", &LuaQuest::GetMinLevel },
     { "GetNextQuestId", &LuaQuest::GetNextQuestId },
     { "GetPrevQuestId", &LuaQuest::GetPrevQuestId },
@@ -1161,7 +1162,7 @@ ALERegister<Group> GroupMethods[] =
     { "IsLFGGroup", &LuaGroup::IsLFGGroup },
     { "IsRaidGroup", &LuaGroup::IsRaidGroup },
     { "IsBGGroup", &LuaGroup::IsBGGroup },
-    // {"IsBFGroup", &LuaGroup::IsBFGroup},                       // :IsBFGroup() - UNDOCUMENTED - Returns true if the group is a battlefield group
+    { "IsBFGroup", &LuaGroup::IsBFGroup },
     { "IsMember", &LuaGroup::IsMember },
     { "IsAssistant", &LuaGroup::IsAssistant },
     { "SameSubGroup", &LuaGroup::SameSubGroup },
@@ -1169,7 +1170,7 @@ ALERegister<Group> GroupMethods[] =
 
     // Other
     { "SendPacket", &LuaGroup::SendPacket },
-    // {"ConvertToLFG", &LuaGroup::ConvertToLFG},                 // :ConvertToLFG() - UNDOCUMENTED - Converts the group to an LFG group
+    { "ConvertToLFG", &LuaGroup::ConvertToLFG },
     { "ConvertToRaid", &LuaGroup::ConvertToRaid },
 
     { NULL, NULL }

@@ -218,11 +218,11 @@ namespace LuaItem
         return 1;
     }
 
-    /*int IsRefundExpired(lua_State* L, Item* item)// TODO: Implement core support
+    int IsRefundExpired(lua_State* L, Item* item)
     {
         ALE::Push(L, item->IsRefundExpired());
         return 1;
-    }*/
+    }
 
     /**
      * Returns the chat link of the [Item]

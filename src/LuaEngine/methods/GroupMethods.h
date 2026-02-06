@@ -159,17 +159,11 @@ namespace LuaGroup
         return 1;
     }
 
-    /*int IsLFGGroup(lua_State* L, Group* group) // TODO: Implementation
-    {
-        ALE::Push(L, group->isLFGGroup());
-        return 1;
-    }*/
-
-    /*int IsBFGroup(lua_State* L, Group* group) // TODO: Implementation
+    int IsBFGroup(lua_State* L, Group* group)
     {
         ALE::Push(L, group->isBFGroup());
         return 1;
-    }*/
+    }
 
     /**
      * Returns a table with the [Player]s in this [Group]
@@ -425,11 +419,12 @@ namespace LuaGroup
         return 0;
     }
 
-    /*int ConvertToLFG(lua_State* L, Group* group) // TODO: Implementation
+    int ConvertToLFG(lua_State* L, Group* group)
     {
-        group->ConvertToLFG();
+        bool restricted = ALE::CHECKVAL<bool>(L, 2, true);
+        group->ConvertToLFG(restricted);
         return 0;
-    }*/
+    }
 };
 
 #endif

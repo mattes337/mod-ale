@@ -61,11 +61,11 @@ namespace LuaGameObject
         return 1;
     }
 
-    /*int IsDestructible(lua_State* L, GameObject* go) // TODO: Implementation core side
+    int IsDestructible(lua_State* L, GameObject* go)
     {
         ALE::Push(L, go->IsDestructibleBuilding());
         return 1;
-    }*/
+    }
 
     /**
      * Returns display ID of the [GameObject]

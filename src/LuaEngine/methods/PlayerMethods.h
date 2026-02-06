@@ -1653,29 +1653,29 @@ namespace LuaPlayer
         return 1;
     }
 
-    /*int GetRecruiterId(lua_State* L, Player* player)
+    int GetRecruiterId(lua_State* L, Player* player)
     {
         ALE::Push(L, player->GetSession()->GetRecruiterId());
         return 1;
-    }*/
+    }
 
-    /*int GetSelectedPlayer(lua_State* L, Player* player)
+    int GetSelectedPlayer(lua_State* L, Player* player)
     {
         ALE::Push(L, player->GetSelectedPlayer());
         return 1;
-    }*/
+    }
 
-    /*int GetSelectedUnit(lua_State* L, Player* player)
+    int GetSelectedUnit(lua_State* L, Player* player)
     {
         ALE::Push(L, player->GetSelectedUnit());
         return 1;
-    }*/
+    }
 
-    /*int GetNearbyGameObject(lua_State* L, Player* player)
+    int GetNearbyGameObject(lua_State* L, Player* player)
     {
         ALE::Push(L, ChatHandler(player->GetSession()).GetNearbyGameObject());
         return 1;
-    }*/
+    }
     
     /**
      * Locks the player controls and disallows all movement and casting.
@@ -2082,14 +2082,6 @@ namespace LuaPlayer
             player->CompletedAchievement(t);
         return 0;
     }
-
-    /*int SetMovement(lua_State* L, Player* player)
-    {
-        int32 pType = ALE::CHECKVAL<int32>(L, 2);
-
-        player->SetMovement((PlayerMovementType)pType);
-        return 0;
-    }*/
 
     /**
      * Reset the [Player]s completed achievements
@@ -3848,90 +3840,46 @@ namespace LuaPlayer
         return 0;
     }
 
-    /*int BindToInstance(lua_State* L, Player* player)
+    int BindToInstance(lua_State* /*L*/, Player* player)
     {
-    player->BindToInstance();
-    return 0;
-    }*/
+        player->BindToInstance();
+        return 0;
+    }
 
-    /*int AddTalent(lua_State* L, Player* player)
+    int GainSpellComboPoints(lua_State* L, Player* player)
     {
-    uint32 spellId = ALE::CHECKVAL<uint32>(L, 2);
-    uint8 spec = ALE::CHECKVAL<uint8>(L, 3);
-    bool learning = ALE::CHECKVAL<bool>(L, 4, true);
-    if (spec >= MAX_TALENT_SPECS)
-    ALE::Push(L, false);
-    else
-    ALE::Push(L, player->AddTalent(spellId, spec, learning));
-    return 1;
-    }*/
+        int8 count = ALE::CHECKVAL<int8>(L, 2);
+        player->AddComboPoints(count);
+        return 0;
+    }
 
-    /*int GainSpellComboPoints(lua_State* L, Player* player)
+    int KillGOCredit(lua_State* L, Player* player)
     {
-    int8 count = ALE::CHECKVAL<int8>(L, 2);
+        uint32 entry = ALE::CHECKVAL<uint32>(L, 2);
+        ObjectGuid guid = ALE::CHECKVAL<ObjectGuid>(L, 3);
+        player->KillCreditGO(entry, guid);
+        return 0;
+    }
 
-    player->GainSpellComboPoints(count);
-    return 0;
-    }*/
-
-    /*int KillGOCredit(lua_State* L, Player* player)
+    int KilledPlayerCredit(lua_State* /*L*/, Player* player)
     {
-    uint32 entry = ALE::CHECKVAL<uint32>(L, 2);
-    ObjectGuid guid = ALE::CHECKVAL<ObjectGuid>(L, 3);
-    player->KillCreditGO(entry, guid);
-    return 0;
-    }*/
+        player->KilledPlayerCredit();
+        return 0;
+    }
 
-    /*int KilledPlayerCredit(lua_State* L, Player* player)
+    int RemoveRewardedQuest(lua_State* L, Player* player)
     {
-    player->KilledPlayerCredit();
-    return 0;
-    }*/
+        uint32 entry = ALE::CHECKVAL<uint32>(L, 2);
+        player->RemoveRewardedQuest(entry);
+        return 0;
+    }
 
-    /*int RemoveRewardedQuest(lua_State* L, Player* player)
+    int RemoveActiveQuest(lua_State* L, Player* player)
     {
-    uint32 entry = ALE::CHECKVAL<uint32>(L, 2);
-
-    player->RemoveRewardedQuest(entry);
-    return 0;
-    }*/
-
-    /*int RemoveActiveQuest(lua_State* L, Player* player)
-    {
-    uint32 entry = ALE::CHECKVAL<uint32>(L, 2);
-
-    player->RemoveActiveQuest(entry);
-    return 0;
-    }*/
-
-    /*int SummonPet(lua_State* L, Player* player)
-    {
-    uint32 entry = ALE::CHECKVAL<uint32>(L, 2);
-    float x = ALE::CHECKVAL<float>(L, 3);
-    float y = ALE::CHECKVAL<float>(L, 4);
-    float z = ALE::CHECKVAL<float>(L, 5);
-    float o = ALE::CHECKVAL<float>(L, 6);
-    uint32 petType = ALE::CHECKVAL<uint32>(L, 7);
-    uint32 despwtime = ALE::CHECKVAL<uint32>(L, 8);
-
-    if (petType >= MAX_PET_TYPE)
-    return 0;
-
-    player->SummonPet(entry, x, y, z, o, (PetType)petType, despwtime);
-    return 0;
-    }*/
-
-    /*int RemovePet(lua_State* L, Player* player)
-    {
-    int mode = ALE::CHECKVAL<int>(L, 2, PET_SAVE_AS_DELETED);
-    bool returnreagent = ALE::CHECKVAL<bool>(L, 2, false);
-
-    if (!player->GetPet())
-    return 0;
-
-    player->RemovePet(player->GetPet(), (PetSaveMode)mode, returnreagent);
-    return 0;
-    }*/
+        uint32 entry = ALE::CHECKVAL<uint32>(L, 2);
+        player->RemoveActiveQuest(entry);
+        return 0;
+    }
 
     /**
      * Set bonus talent count to a specific count for the [Player]

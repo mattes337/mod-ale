@@ -533,23 +533,23 @@ namespace LuaUnit
         return 1;
     }
 
-    /*int IsVisible(lua_State* L, Unit* unit)
+    int IsVisible(lua_State* L, Unit* unit)
     {
         ALE::Push(L, unit->IsVisible());
         return 1;
-    }*/
+    }
 
-    /*int IsMoving(lua_State* L, Unit* unit)
+    int IsMoving(lua_State* L, Unit* unit)
     {
         ALE::Push(L, unit->isMoving());
         return 1;
-    }*/
+    }
 
-    /*int IsFlying(lua_State* L, Unit* unit)
+    int IsFlying(lua_State* L, Unit* unit)
     {
         ALE::Push(L, unit->IsFlying());
         return 1;
-    }*/
+    }
 
     /**
      * Returns the [Unit]'s owner.
@@ -1177,11 +1177,11 @@ namespace LuaUnit
         return 1;
     }
 
-    /*int GetVehicle(lua_State* L, Unit* unit)
+    int GetVehicle(lua_State* L, Unit* unit)
     {
-    ALE::Push(L, unit->GetVehicle());
-    return 1;
-    }*/
+        ALE::Push(L, unit->GetVehicle());
+        return 1;
+    }
 
     /**
      * Returns the Critter Guid
@@ -1806,12 +1806,12 @@ namespace LuaUnit
         return 0;
     }
 
-    /*int SetStunned(lua_State* L, Unit* unit)
+    int SetStunned(lua_State* L, Unit* unit)
     {
-    bool apply = ALE::CHECKVAL<bool>(L, 2, true);
-    unit->SetControlled(apply, UNIT_STATE_STUNNED);
-    return 0;
-    }*/
+        bool apply = ALE::CHECKVAL<bool>(L, 2, true);
+        unit->SetControlled(apply, UNIT_STATE_STUNNED, nullptr, false);
+        return 0;
+    }
 
     /**
      * Roots the [Unit] to the ground, if 'false' specified, unroots the [Unit].
@@ -1849,19 +1849,19 @@ namespace LuaUnit
         return 0;
     }
 
-    /*int SetCanFly(lua_State* L, Unit* unit)
+    int SetCanFly(lua_State* L, Unit* unit)
     {
         bool apply = ALE::CHECKVAL<bool>(L, 2, true);
         unit->SetCanFly(apply);
         return 0;
-    }*/
+    }
 
-    /*int SetVisible(lua_State* L, Unit* unit)
+    int SetVisible(lua_State* L, Unit* unit)
     {
         bool x = ALE::CHECKVAL<bool>(L, 2, true);
         unit->SetVisible(x);
         return 0;
-    }*/
+    }
 
     /**
      * Clears the [Unit]'s threat list.
@@ -2646,80 +2646,79 @@ namespace LuaUnit
         return 0;
     }
 
-    /*int RestoreDisplayId(lua_State* L, Unit* unit)
+    int RestoreDisplayId(lua_State* L, Unit* unit)
     {
         unit->RestoreDisplayId();
         return 0;
-    }*/
+    }
 
-    /*int RestoreFaction(lua_State* L, Unit* unit)
+    int RestoreFaction(lua_State* L, Unit* unit)
     {
         unit->RestoreFaction();
         return 0;
-    }*/
+    }
 
-    /*int RemoveBindSightAuras(lua_State* L, Unit* unit)
+    int RemoveBindSightAuras(lua_State* L, Unit* unit)
     {
         unit->RemoveBindSightAuras();
         return 0;
-    }*/
+    }
 
-    /*int RemoveCharmAuras(lua_State* L, Unit* unit)
+    int RemoveCharmAuras(lua_State* L, Unit* unit)
     {
         unit->RemoveCharmAuras();
         return 0;
-    }*/
-
-    /*int DisableMelee(lua_State* L, Unit* unit)
-    {
-    bool apply = ALE::CHECKVAL<bool>(L, 2, true);
-
-    if (apply)
-    unit->AddUnitState(UNIT_STATE_CANNOT_AUTOATTACK);
-    else
-    unit->ClearUnitState(UNIT_STATE_CANNOT_AUTOATTACK);
-    return 0;
-    }*/
-
-    /*int SummonGuardian(lua_State* L, Unit* unit)
-    {
-    uint32 entry = ALE::CHECKVAL<uint32>(L, 2);
-    float x = ALE::CHECKVAL<float>(L, 3);
-    float y = ALE::CHECKVAL<float>(L, 4);
-    float z = ALE::CHECKVAL<float>(L, 5);
-    float o = ALE::CHECKVAL<float>(L, 6);
-    uint32 desp = ALE::CHECKVAL<uint32>(L, 7, 0);
-
-    SummonPropertiesEntry const* properties = sSummonPropertiesStore.LookupEntry(61);
-    if (!properties)
-    return 1;
-    Position pos;
-    pos.Relocate(x,y,z,o);
-    TempSummon* summon = unit->GetMap()->SummonCreature(entry, pos, properties, desp, unit);
-
-    if (!summon)
-    return 1;
-
-    if (summon->HasUnitTypeMask(UNIT_MASK_GUARDIAN))
-    ((Guardian*)summon)->InitStatsForLevel(unit->getLevel());
-
-    if (properties && properties->Category == SUMMON_CATEGORY_ALLY)
-    summon->setFaction(unit->getFaction());
-    if (summon->GetEntry() == 27893)
-    {
-    if (uint32 weapon = unit->GetUInt32Value(PLAYER_VISIBLE_ITEM_16_ENTRYID))
-    {
-    summon->SetDisplayId(11686);
-    summon->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID, weapon);
     }
-    else
-    summon->SetDisplayId(1126);
-    }
-    summon->AI()->EnterEvadeMode();
 
-    ALE::Push(L, summon);
-    return 1;
-    }*/
+    int DisableMelee(lua_State* L, Unit* unit)
+    {
+        bool apply = ALE::CHECKVAL<bool>(L, 2, true);
+        if (apply)
+            unit->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PACIFIED);
+        else
+            unit->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PACIFIED);
+        return 0;
+    }
+
+    int SummonGuardian(lua_State* L, Unit* unit)
+    {
+        uint32 entry = ALE::CHECKVAL<uint32>(L, 2);
+        float x = ALE::CHECKVAL<float>(L, 3);
+        float y = ALE::CHECKVAL<float>(L, 4);
+        float z = ALE::CHECKVAL<float>(L, 5);
+        float o = ALE::CHECKVAL<float>(L, 6);
+        uint32 desp = ALE::CHECKVAL<uint32>(L, 7, 0);
+
+        SummonPropertiesEntry const* properties = sSummonPropertiesStore.LookupEntry(61);
+        if (!properties)
+            return 1;
+        Position pos;
+        pos.Relocate(x, y, z, o);
+        TempSummon* summon = unit->GetMap()->SummonCreature(entry, pos, properties, desp, unit);
+
+        if (!summon)
+            return 1;
+
+        if (summon->HasUnitTypeMask(UNIT_MASK_GUARDIAN))
+            ((Guardian*)summon)->InitStatsForLevel(unit->getLevel());
+
+        if (properties && properties->Category == SUMMON_CATEGORY_ALLY)
+            summon->setFaction(unit->getFaction());
+        if (summon->GetEntry() == 27893)
+        {
+            if (uint32 weapon = unit->GetUInt32Value(PLAYER_VISIBLE_ITEM_16_ENTRYID))
+            {
+                summon->SetDisplayId(11686);
+                summon->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID, weapon);
+            }
+            else
+                summon->SetDisplayId(1126);
+        }
+        summon->AI()->EnterEvadeMode();
+
+        ALE::Push(L, summon);
+        return 1;
+    }
 
     /**
      * Clear the threat of a [Unit] in the threat list.

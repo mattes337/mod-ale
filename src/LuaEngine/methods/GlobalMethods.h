@@ -908,6 +908,11 @@ namespace LuaGlobalFunctions
         return RegisterEventHelper(L, Hooks::REGTYPE_BG);
     }
 
+    int RegisterVehicleEvent(lua_State* L)
+    {
+        return RegisterEventHelper(L, Hooks::REGTYPE_VEHICLE);
+    }
+
     /**
      * Registers a [WorldPacket] event handler.
      *
@@ -2796,6 +2801,22 @@ namespace LuaGlobalFunctions
         {
             uint32 event_type = ALE::CHECKVAL<uint32>(L, 1);
             ALE::GetALE(L)->BGEventBindings->Clear(Key((Hooks::BGEvents)event_type));
+        }
+        return 0;
+    }
+
+    int ClearVehicleEvents(lua_State* L)
+    {
+        typedef EventKey<Hooks::VehicleEvents> Key;
+
+        if (lua_isnoneornil(L, 1))
+        {
+            ALE::GetALE(L)->VehicleEventBindings->Clear();
+        }
+        else
+        {
+            uint32 event_type = ALE::CHECKVAL<uint32>(L, 1);
+            ALE::GetALE(L)->VehicleEventBindings->Clear(Key((Hooks::VehicleEvents)event_type));
         }
         return 0;
     }
