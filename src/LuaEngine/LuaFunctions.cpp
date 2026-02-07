@@ -778,6 +778,7 @@ ALERegister<Player> PlayerMethods[] =
     { "DurabilityRepairAll", &LuaPlayer::DurabilityRepairAll },
     { "DurabilityRepair", &LuaPlayer::DurabilityRepair },
     { "ModifyHonorPoints", &LuaPlayer::ModifyHonorPoints },
+    { "RewardHonor", &LuaPlayer::RewardHonor },
     { "ModifyArenaPoints", &LuaPlayer::ModifyArenaPoints },
     { "LeaveBattleground", &LuaPlayer::LeaveBattleground },
     { "BindToInstance", &LuaPlayer::BindToInstance },
