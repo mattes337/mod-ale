@@ -26,5 +26,5 @@ void ALEConfig::BuildConfigCache()
     SetConfigValue<std::string>(ALEConfigValues::REQUIRE_PATH,        "ALE.RequirePaths",       "");
     SetConfigValue<std::string>(ALEConfigValues::REQUIRE_CPATH,       "ALE.RequireCPaths",      "");
 
-    SetConfigValue<uint32>(ALEConfigValues::AUTORELOAD_INTERVAL,      "ALE.AutoReloadInterval", 1);
+    SetConfigValue<uint32>(ALEConfigValues::AUTORELOAD_INTERVAL,      "ALE.AutoReloadInterval", 60);
 }

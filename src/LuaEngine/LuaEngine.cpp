@@ -77,13 +77,14 @@ void ALE::Initialize()
     // Create global ALE
     GALE = new ALE();
 
+    // File watcher DISABLED - causes high CPU usage
     // Start file watcher if enabled
-    if (ALEConfig::GetInstance().IsAutoReloadEnabled())
-    {
-        uint32 watchInterval = eConfigMgr->GetOption<uint32>("ALE.AutoReloadInterval", 1);
-        fileWatcher = std::make_unique<ALEFileWatcher>();
-        fileWatcher->StartWatching(lua_folderpath, watchInterval);
-    }
+    // if (ALEConfig::GetInstance().IsAutoReloadEnabled())
+    // {
+    //     uint32 watchInterval = eConfigMgr->GetOption<uint32>("ALE.AutoReloadInterval", 1);
+    //     fileWatcher = std::make_unique<ALEFileWatcher>();
+    //     fileWatcher->StartWatching(lua_folderpath, watchInterval);
+    // }
 }
 
 void ALE::Uninitialize()
