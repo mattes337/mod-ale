@@ -513,6 +513,9 @@ public:
     void OnPlayerModifyHealReceived(Player* player, Unit* target, uint32& heal, SpellInfo const* spellInfo);
     uint32 OnPlayerDealDamage(Player* player, Unit* pVictim, uint32 damage, DamageEffectType damagetype);
     void OnPlayerReleasedGhost(Player* player);
+    void OnPlayerEnvironmentalDamage(Player* player, uint8 type, uint32& damage);
+    void OnPlayerModifyItemProcChance(Player* player, Unit* target, Item* item, uint32 spellId, float& chance);
+    bool CanItemTriggerCombatSpell(Player* player, Item* item, uint32 itemEntry);
 
     /* Vehicle */
     void OnInstall(Vehicle* vehicle);

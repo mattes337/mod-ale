@@ -238,6 +238,9 @@ namespace Hooks
         PLAYER_EVENT_ON_MODIFY_HEAL_RECEIVED                =     71,       // (event, player, target, heal, spellInfo) - Can return new heal amount
         PLAYER_EVENT_ON_DEAL_DAMAGE                         =     72,       // (event, player, target, damage, damagetype) - Can return new damage amount
         PLAYER_EVENT_ON_RELEASED_GHOST                      =     73,       // (event, player)
+        PLAYER_EVENT_ON_ENVIRONMENTAL_DAMAGE                =     74,       // (event, player, type, damage) - Can return new damage amount (0 = prevent)
+        PLAYER_EVENT_ON_MODIFY_ITEM_PROC_CHANCE             =     75,       // (event, player, target, item, spellId, chance) - Can return new chance
+        PLAYER_EVENT_CAN_ITEM_TRIGGER_COMBAT_SPELL          =     76,       // (event, player, item, itemEntry) - Can return true to allow non-weapon procs
 
         PLAYER_EVENT_COUNT
     };

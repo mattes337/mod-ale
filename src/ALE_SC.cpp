@@ -644,7 +644,10 @@ public:
         PLAYERHOOK_ON_BEFORE_UPDATE_SKILL,
         PLAYERHOOK_ON_UPDATE_SKILL,
         PLAYERHOOK_CAN_RESURRECT,
-        PLAYERHOOK_ON_PLAYER_RELEASED_GHOST
+        PLAYERHOOK_ON_PLAYER_RELEASED_GHOST,
+        PLAYERHOOK_ON_PLAYER_ENVIRONMENTAL_DAMAGE,
+        PLAYERHOOK_ON_PLAYER_MODIFY_ITEM_PROC_CHANCE,
+        PLAYERHOOK_CAN_ITEM_TRIGGER_COMBAT_SPELL
     }) { }
 
     void OnPlayerResurrect(Player* player, float /*restore_percent*/, bool /*applySickness*/) override
@@ -965,6 +968,21 @@ public:
     void OnPlayerReleasedGhost(Player* player) override
     {
         sALE->OnPlayerReleasedGhost(player);
+    }
+
+    void OnPlayerEnvironmentalDamage(Player* player, uint8 type, uint32& damage) override
+    {
+        sALE->OnPlayerEnvironmentalDamage(player, type, damage);
+    }
+
+    void OnPlayerModifyItemProcChance(Player* player, Unit* target, Item* item, SpellInfo const* spellInfo, float& chance) override
+    {
+        sALE->OnPlayerModifyItemProcChance(player, target, item, spellInfo ? spellInfo->Id : 0, chance);
+    }
+
+    bool CanItemTriggerCombatSpell(Player* player, Item* item, ItemTemplate const* proto) override
+    {
+        return sALE->CanItemTriggerCombatSpell(player, item, proto ? proto->ItemId : 0);
     }
 };
 

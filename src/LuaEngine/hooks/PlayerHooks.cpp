@@ -768,6 +768,67 @@ void ALE::OnPlayerReleasedGhost(Player* player)
     CallAllFunctions(PlayerEventBindings, key);
 }
 
+void ALE::OnPlayerEnvironmentalDamage(Player* player, uint8 type, uint32& damage)
+{
+    START_HOOK(PLAYER_EVENT_ON_ENVIRONMENTAL_DAMAGE);
+    Push(player);
+    Push(type);
+    Push(damage);
+    int damageIndex = lua_gettop(L);
+    int n = SetupStack(PlayerEventBindings, key, 3);
+
+    while (n > 0)
+    {
+        int r = CallOneFunction(n--, 3, 1);
+
+        if (lua_isnumber(L, r))
+        {
+            damage = CHECKVAL<uint32>(L, r);
+            ReplaceArgument(damage, static_cast<uint8>(damageIndex));
+        }
+
+        lua_pop(L, 1);
+    }
+
+    CleanUpStack(3);
+}
+
+void ALE::OnPlayerModifyItemProcChance(Player* player, Unit* target, Item* item, uint32 spellId, float& chance)
+{
+    START_HOOK(PLAYER_EVENT_ON_MODIFY_ITEM_PROC_CHANCE);
+    Push(player);
+    Push(target);
+    Push(item);
+    Push(spellId);
+    Push(chance);
+    int chanceIndex = lua_gettop(L);
+    int n = SetupStack(PlayerEventBindings, key, 5);
+
+    while (n > 0)
+    {
+        int r = CallOneFunction(n--, 5, 1);
+
+        if (lua_isnumber(L, r))
+        {
+            chance = CHECKVAL<float>(L, r);
+            ReplaceArgument(chance, static_cast<uint8>(chanceIndex));
+        }
+
+        lua_pop(L, 1);
+    }
+
+    CleanUpStack(5);
+}
+
+bool ALE::CanItemTriggerCombatSpell(Player* player, Item* item, uint32 itemEntry)
+{
+    START_HOOK_WITH_RETVAL(PLAYER_EVENT_CAN_ITEM_TRIGGER_COMBAT_SPELL, false);
+    Push(player);
+    Push(item);
+    Push(itemEntry);
+    return CallAllFunctionsBool(PlayerEventBindings, key, false);
+}
+
 void ALE::OnPlayerQuestAccept(Player* player, Quest const* quest)
 {
     START_HOOK(PLAYER_EVENT_ON_QUEST_ACCEPT);
